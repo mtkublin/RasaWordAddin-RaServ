@@ -10,8 +10,9 @@ produces:
 
 basePath: /api
 
+
 paths:
-  /train_data:
+  /traindata:
     get:
       operationId: traindata.read_all
       tags:
