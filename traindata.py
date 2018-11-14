@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import make_response, abort
+from mongo_import import mongoimport_train
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
@@ -32,12 +33,14 @@ def create(t_data_instance):
     dataid = str(dataid)
     t_data = t_data_instance.get("DATA", None)
     if dataid not in TRAIN_DATA and dataid is not None:
+        mongo_id = mongoimport_train(json_obj=t_data)
         TRAIN_DATA[dataid] = {
             "dataid": dataid,
             "DATA": t_data,
             "timestamp": get_timestamp(),
         }
-        return TRAIN_DATA[dataid], 201
+        return mongo_id
+        # return TRAIN_DATA[dataid], 201
     else:
         abort(
             406,
