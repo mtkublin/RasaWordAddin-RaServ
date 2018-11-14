@@ -36,8 +36,8 @@ paths:
             type: array
             items:
               properties:
-                IDX:
-                  type: integer
+                dataid:
+                  type: string
                 DATA:
                   type: object
                 timestamp:
@@ -64,7 +64,7 @@ paths:
         201:
           description: Successfully created instance of traindata in list
 
-  /traindata/{IDX}:
+  /traindata/{dataid}:
     get:
       operationId: traindata.read_one
       tags:
@@ -72,17 +72,17 @@ paths:
       summary: Read one traindata instance from the traindata list
       description: Read one traindata instance from the traindata list
       parameters:
-        - name: IDX
+        - name: dataid
           in: path
-          description: IDX of the traindata instance to get from the list
-          type: integer
+          description: dataid of the traindata instance to get from the list
+          type: string
           required: True
       responses:
         200:
           description: Successfully read traindata instance from traindata list operation
           schema:
             properties:
-              IDX:
+              dataid:
                 type: integer
               DATA:
                 type: object
@@ -96,9 +96,9 @@ paths:
       summary: Delete a traindata instance from the traindata list
       description: Delete a traindata instance
       parameters:
-        - name: IDX
+        - name: dataid
           in: path
-          type: integer
+          type: string
           required: True
       responses:
         200:
@@ -129,52 +129,52 @@ paths:
             type: array
             items:
               properties:
-                IDX:
-                  type: integer
+                dataid:
+                  type: string
                 DATA:
                   type: object
                 timestamp:
                   type: string
 
-  /testdata/{IDX}:
-    get:
-      operationId: testdata.read_one
-      tags:
-      - TestData
-      summary: Read one testdata instance from the testdata list
-      description: Read one testdata instance from the testdata list
-      parameters:
-      - name: IDX
-          in: path
-          description: IDX of the testdata instance to get from the list
-          type: integer
-          required: True
-      responses:
-        200:
-          description: Successfully read testdata instance from testdata list operation
-          schema:
-            properties:
-              IDX:
-                type: integer
-              DATA:
-                type: object
-              timestamp:
-                type: string
+#  /testdata/{dataid}:
+#    get:
+#      operationId: testdata.read_one
+#      tags:
+#      - TestData
+#      summary: Read one testdata instance from the testdata list
+#      description: Read one testdata instance from the testdata list
+#      parameters:
+#      - name: dataid
+#          in: path
+#          description: dataid of the testdata instance to get from the list
+#          type: string
+#          required: True
+#      responses:
+#        200:
+#          description: Successfully read testdata instance from testdata list operation
+#          schema:
+#            properties:
+#              dataid:
+#                type: string
+#              DATA:
+#                type: object
+#              timestamp:
+#                type: string
 
-    delete:
-      operationId: testdata.delete
-      tags:
-      - TestData
-      summary: Delete a testdata instance from the testdata list
-      description: Delete a testdata instance
-      parameters:
-      - name: IDX
-        in: path
-        type: integer
-        required: True
-      responses:
-        200:
-          description: Successfully deleted a testdata instance from testdata list
+#    delete:
+#      operationId: testdata.delete
+#      tags:
+#      - TestData
+#      summary: Delete a testdata instance from the testdata list
+#      description: Delete a testdata instance
+#      parameters:
+#      - name: dataid
+#        in: path
+#        type: string
+#        required: True
+#      responses:
+#        200:
+#          description: Successfully deleted a testdata instance from testdata list
 
   /testdata/getlast:
     get:
@@ -188,8 +188,8 @@ paths:
           description: Successfully read latest testdata instance from testdata list operation
           schema:
             properties:
-              IDX:
-                type: integer
+              dataid:
+                type: string
               DATA:
                 type: object
               timestamp:

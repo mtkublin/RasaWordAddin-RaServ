@@ -7,8 +7,8 @@ def get_timestamp():
 
 
 TEST_DATA = {
-    0: {
-        "IDX": 0,
+    "0": {
+        "dataid": "0",
         "DATA": [
             {
                 'intent': {
@@ -1830,37 +1830,37 @@ def read_all():
     return [TEST_DATA[key] for key in sorted(TEST_DATA.keys())]
 
 
-def read_one(IDX):
-    if IDX in TEST_DATA:
-        t_data = TEST_DATA.get(IDX)
+def read_one(dataid):
+    if dataid in TEST_DATA:
+        t_data = TEST_DATA.get(dataid)
     else:
         abort(
-            404, "IDX {IDX} not found".format(IDX=IDX)
+            404, "dataid {dataid} not found".format(dataid=dataid)
         )
     return t_data
 
 
 def read_latest():
-    IDX_list = []
+    dataid = -1
     for key in TEST_DATA:
-        IDX_list += [key]
-    IDX = IDX_list[-1]
-    if IDX in TEST_DATA:
-        t_data = TEST_DATA.get(IDX)
+        dataid += 1
+    dataid = str(dataid)
+    if dataid in TEST_DATA:
+        t_data = TEST_DATA.get(dataid)
     else:
         abort(
-            404, "IDX {IDX} not found".format(IDX=IDX)
+            404, "dataid {dataid} not found".format(dataid=dataid)
         )
     return t_data
 
 
-def delete(IDX):
-    if IDX in TEST_DATA:
-        del TEST_DATA[IDX]
+def delete(dataid):
+    if dataid in TEST_DATA:
+        del TEST_DATA[dataid]
         return make_response(
-            "{IDX} successfully deleted".format(IDX=IDX), 200
+            "{dataid} successfully deleted".format(dataid=dataid), 200
         )
     else:
         abort(
-            404, "IDX {IDX} not found".format(IDX=IDX)
+            404, "dataid {dataid} not found".format(dataid=dataid)
         )

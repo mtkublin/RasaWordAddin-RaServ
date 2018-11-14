@@ -5,8 +5,8 @@ def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
 TRAIN_DATA = {
-    0: {
-        "IDX": 0,
+    "0": {
+        "dataid": "0",
         "DATA": {},
         "timestamp": get_timestamp(),
     },
@@ -15,40 +15,42 @@ TRAIN_DATA = {
 def read_all():
     return [TRAIN_DATA[key] for key in sorted(TRAIN_DATA.keys())]
 
-def read_one(IDX):
-    if IDX in TRAIN_DATA:
-        t_data = TRAIN_DATA.get(IDX)
+def read_one(dataid):
+    if dataid in TRAIN_DATA:
+        t_data = TRAIN_DATA.get(dataid)
     else:
         abort(
-            404, "IDX {IDX} not found".format(IDX=IDX)
+            404, "dataid {dataid} not found".format(dataid=dataid)
         )
     return t_data
 
 def create(t_data_instance):
-    IDX = 0
+    dataid = 0
     for key in TRAIN_DATA:
-        IDX += 1
-    t_data = t_data_instance.get()
-    if IDX not in TRAIN_DATA and IDX is not None:
-        TRAIN_DATA[IDX] = {
+        dataid += 1
+    dataid = str(dataid)
+    t_data = t_data_instance.get("DATA", None)
+    if dataid not in TRAIN_DATA and dataid is not None:
+        TRAIN_DATA[dataid] = {
+            "dataid": dataid,
             "DATA": t_data,
             "timestamp": get_timestamp(),
         }
-        return TRAIN_DATA[IDX], 201
+        return TRAIN_DATA[dataid], 201
     else:
         abort(
             406,
-            "IDX overlapping existing one".format(IDX=IDX),
+            "dataid overlapping existing one".format(dataid=dataid),
         )
 
-def delete(IDX):
-    if IDX in TRAIN_DATA:
-        del TRAIN_DATA[IDX]
+def delete(dataid):
+    if dataid in TRAIN_DATA:
+        del TRAIN_DATA[dataid]
         return make_response(
-            "{IDX} successfully deleted".format(IDX=IDX), 200
+            "{dataid} successfully deleted".format(dataid=dataid), 200
         )
 
     else:
         abort(
-            404, "IDX {IDX} not found".format(IDX=IDX)
+            404, "dataid {dataid} not found".format(dataid=dataid)
         )
