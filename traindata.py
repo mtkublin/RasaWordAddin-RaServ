@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import make_response, abort
+from mongo_import import mongoimport_train
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
@@ -36,6 +37,7 @@ def create(t_data_instance):
             "DATA": t_data,
             "timestamp": get_timestamp(),
         }
+        mongoimport_train(json_obj=t_data)
         return TRAIN_DATA[dataid], 201
     else:
         abort(
