@@ -4,6 +4,7 @@ from mongo_import import mongo_import
 import queue
 import requests
 
+
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
@@ -63,7 +64,6 @@ def completed(req_id):
 
 def read_all():
     return [TRAIN_DATA[key] for key in sorted(TRAIN_DATA.keys())]
-
 
 # class CreateTrainData():
 #     def __init__(self):

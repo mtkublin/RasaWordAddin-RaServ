@@ -6,13 +6,10 @@ app = connexion.App(__name__, specification_dir="./")
 
 app.add_api("apiconfig.yml")
 
+
 @app.route("/")
 def home():
     return render_template("home.html")
-
-def build_queue(i):
-    q = queue.Queue()
-    q.put(i)
 
 
 if __name__ == "__main__":
