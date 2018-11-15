@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import abort
 from mongo_import import mongo_import
 import queue
+import requests
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
@@ -37,6 +38,8 @@ def create(t_data_instance):
             started.append(que.get())
             print("JUST STARTED: " + str(started[0]))
             data_to_send = TRAIN_DATA[started[0]]
+            r = requests.post(url="http://127.0.0.1:8000/api/traindata",
+                              json={"DATA": data_to_send})
         else:
             print("STARTED EARLIER: " + str(started[0]))
         return TRAIN_DATA[req_id], 201
