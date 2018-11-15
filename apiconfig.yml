@@ -10,7 +10,6 @@ produces:
 
 basePath: /api
 
-
 paths:
   /traindata:
     get:
@@ -79,55 +78,3 @@ paths:
       responses:
         200:
           description: Successfully updated person in people list
-
-  /testdata:
-    get:
-      operationId: testdata.read_all
-      tags:
-      - TestData
-      summary: Read the entire list of testdata
-      description: Read the list of testdata
-      parameters:
-      - name: length
-        in: query
-        type: integer
-        description: Number of testdata to get from testdata
-        required: false
-      - name: offset
-        in: query
-        type: integer
-        description: Offset from beginning of list where to start gathering testdata
-        required: false
-      responses:
-        200:
-          description: Successfully read testdata list operation
-          schema:
-            type: array
-            items:
-              properties:
-                req_id:
-                  type: string
-                DATA:
-                  type: object
-                timestamp:
-                  type: string
-
-
-  /testdata/getlast:
-    get:
-      operationId: testdata.read_latest
-      tags:
-      - TestData
-      summary: Read latest testdata instance from the testdata list
-      description: Read latest testdata instance from the testdata list
-      responses:
-        200:
-          description: Successfully read latest testdata instance from testdata list operation
-          schema:
-            properties:
-              req_id:
-                type: string
-              DATA:
-                type: object
-              timestamp:
-                type: string
