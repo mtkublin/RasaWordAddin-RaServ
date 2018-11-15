@@ -8,7 +8,7 @@ def get_timestamp():
 
 TEST_DATA = {
     "0": {
-        "dataid": "0",
+        "req_id": "0",
         "DATA": [
             {
                 'intent': {
@@ -1830,37 +1830,37 @@ def read_all():
     return [TEST_DATA[key] for key in sorted(TEST_DATA.keys())]
 
 
-def read_one(dataid):
-    if dataid in TEST_DATA:
-        t_data = TEST_DATA.get(dataid)
+def read_one(req_id):
+    if req_id in TEST_DATA:
+        t_data = TEST_DATA.get(req_id)
     else:
         abort(
-            404, "dataid {dataid} not found".format(dataid=dataid)
+            404, "req_id {req_id} not found".format(req_id=req_id)
         )
     return t_data
 
 
 def read_latest():
-    dataid = -1
+    req_id = -1
     for key in TEST_DATA:
-        dataid += 1
-    dataid = str(dataid)
-    if dataid in TEST_DATA:
-        t_data = TEST_DATA.get(dataid)
+        req_id += 1
+    req_id = str(req_id)
+    if req_id in TEST_DATA:
+        t_data = TEST_DATA.get(req_id)
     else:
         abort(
-            404, "dataid {dataid} not found".format(dataid=dataid)
+            404, "req_id {req_id} not found".format(req_id=req_id)
         )
     return t_data
 
 
-def delete(dataid):
-    if dataid in TEST_DATA:
-        del TEST_DATA[dataid]
+def delete(req_id):
+    if req_id in TEST_DATA:
+        del TEST_DATA[req_id]
         return make_response(
-            "{dataid} successfully deleted".format(dataid=dataid), 200
+            "{req_id} successfully deleted".format(req_id=req_id), 200
         )
     else:
         abort(
-            404, "dataid {dataid} not found".format(dataid=dataid)
+            404, "req_id {req_id} not found".format(req_id=req_id)
         )

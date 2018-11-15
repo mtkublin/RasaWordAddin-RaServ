@@ -34,15 +34,13 @@ paths:
         200:
           description: Successfully read traindata list operation
           schema:
-            type: array
+            type: object
             items:
               properties:
-                dataid:
+                req_id:
                   type: string
-                DATA:
+                mongo_id:
                   type: object
-                timestamp:
-                  type: string
 
     post:
       operationId: traindata.create
@@ -65,45 +63,22 @@ paths:
         201:
           description: Successfully created instance of traindata in list
 
-  /traindata/{dataid}:
-    get:
-      operationId: traindata.read_one
+  /traindata/{req_id}:
+    put:
+      operationId: traindata.completed
       tags:
-        - TrainData
-      summary: Read one traindata instance from the traindata list
-      description: Read one traindata instance from the traindata list
+      - TrainData
+      summary: Update a traindata instance in the traindata list
+      description: Update a traindata instance in the traindata list
       parameters:
-        - name: dataid
-          in: path
-          description: dataid of the traindata instance to get from the list
-          type: string
-          required: True
+      - name: req_id
+        in: path
+        description: ID of request
+        type: string
+        required: True
       responses:
         200:
-          description: Successfully read traindata instance from traindata list operation
-          schema:
-            properties:
-              dataid:
-                type: integer
-              DATA:
-                type: object
-              timestamp:
-                type: string
-
-    delete:
-      operationId: traindata.delete
-      tags:
-        - TrainData
-      summary: Delete a traindata instance from the traindata list
-      description: Delete a traindata instance
-      parameters:
-        - name: dataid
-          in: path
-          type: string
-          required: True
-      responses:
-        200:
-          description: Successfully deleted a traindata instance from traindata list
+          description: Successfully updated person in people list
 
   /testdata:
     get:
@@ -130,52 +105,13 @@ paths:
             type: array
             items:
               properties:
-                dataid:
+                req_id:
                   type: string
                 DATA:
                   type: object
                 timestamp:
                   type: string
 
-#  /testdata/{dataid}:
-#    get:
-#      operationId: testdata.read_one
-#      tags:
-#      - TestData
-#      summary: Read one testdata instance from the testdata list
-#      description: Read one testdata instance from the testdata list
-#      parameters:
-#      - name: dataid
-#          in: path
-#          description: dataid of the testdata instance to get from the list
-#          type: string
-#          required: True
-#      responses:
-#        200:
-#          description: Successfully read testdata instance from testdata list operation
-#          schema:
-#            properties:
-#              dataid:
-#                type: string
-#              DATA:
-#                type: object
-#              timestamp:
-#                type: string
-
-#    delete:
-#      operationId: testdata.delete
-#      tags:
-#      - TestData
-#      summary: Delete a testdata instance from the testdata list
-#      description: Delete a testdata instance
-#      parameters:
-#      - name: dataid
-#        in: path
-#        type: string
-#        required: True
-#      responses:
-#        200:
-#          description: Successfully deleted a testdata instance from testdata list
 
   /testdata/getlast:
     get:
@@ -189,7 +125,7 @@ paths:
           description: Successfully read latest testdata instance from testdata list operation
           schema:
             properties:
-              dataid:
+              req_id:
                 type: string
               DATA:
                 type: object
