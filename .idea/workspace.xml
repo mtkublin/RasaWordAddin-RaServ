@@ -14,7 +14,7 @@
     <session id="1386897026">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.65" value="1" />
@@ -42,7 +42,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="35" />
-          <entry key="py" value="2398" />
+          <entry key="py" value="2399" />
           <entry key="txt" value="41" />
           <entry key="yml" value="388" />
         </counts>
@@ -51,7 +51,7 @@
         <counts>
           <entry key="HTML" value="35" />
           <entry key="PLAIN_TEXT" value="41" />
-          <entry key="Python" value="2398" />
+          <entry key="Python" value="2399" />
           <entry key="YAML" value="388" />
         </counts>
       </usages-collector>
@@ -97,11 +97,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/traindata.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="48" column="36" lean-forward="true" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
+            <state relative-caret-position="221">
+              <caret line="46" column="36" lean-forward="true" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <marker date="1542299230354" expanded="true" signature="1763:1920" ph="..." />
+                <marker date="1542301460730" expanded="true" signature="1631:1788" ph="..." />
               </folding>
             </state>
           </provider>
@@ -307,7 +307,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32502708" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32502708" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.33694476" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -508,11 +508,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/traindata.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="48" column="36" lean-forward="true" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
+        <state relative-caret-position="221">
+          <caret line="46" column="36" lean-forward="true" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <marker date="1542299230354" expanded="true" signature="1763:1920" ph="..." />
+            <marker date="1542301460730" expanded="true" signature="1631:1788" ph="..." />
           </folding>
         </state>
       </provider>
