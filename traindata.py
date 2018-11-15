@@ -1,6 +1,6 @@
 from datetime import datetime
-from flask import make_response, abort
-from mongo_import import mongoimport_train
+from flask import abort
+from mongo_import import mongo_import
 import queue
 
 def get_timestamp():
@@ -26,7 +26,7 @@ def create(t_data_instance):
     req_id = str(req_id)
     t_data = t_data_instance.get("DATA", None)
     if req_id not in TRAIN_DATA and req_id is not None:
-        mongo_id = mongoimport_train(json_obj=t_data)
+        mongo_id = mongo_import(json_obj=t_data)
         TRAIN_DATA[req_id] = {
             "req_id": req_id,
             "mongo_id": mongo_id,
