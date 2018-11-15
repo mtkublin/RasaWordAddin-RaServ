@@ -42,12 +42,13 @@ def create(t_data_instance):
             started["isStarted"] = train_queue.get()
             print("JUST STARTED: " + str(started["isStarted"]))
             data_to_send = TRAIN_DATA[started["isStarted"]]
-            r = requests.post(url="https://raserv.azurewebsites.net/api/train",
+            # r = requests.post(url="https://raserv.azurewebsites.net/api/train",
+            #                   json={"DATA": data_to_send})
+            r = requests.post(url="http://127.0.0.1:8000/api/train",
                               json={"DATA": data_to_send})
-            print(r)
-            print(r.text)
+            print("POST: " + r.text)
         else:
-            print("STARTED EARLIER: " + str(started[0]))
+            print("STARTED EARLIER: " + str(started["isStarted"]))
             print("STARTED: " + str(started))
         return TRAIN_DATA[req_id], 201
     else:
