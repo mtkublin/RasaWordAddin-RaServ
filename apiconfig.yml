@@ -78,3 +78,128 @@ paths:
       responses:
         200:
           description: Successfully updated person in people list
+
+
+  /testdata:
+    get:
+      operationId: testdata.read_all
+      tags:
+        - TestData
+      summary: Read the entire list of testdata
+      description: Read the list of testdata
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of testdata to get from testdata
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering testdata
+          required: false
+      responses:
+        200:
+          description: Successfully read testdata list operation
+          schema:
+            type: object
+            items:
+              properties:
+                req_id:
+                  type: string
+                mongo_id:
+                  type: object
+
+    post:
+      operationId: testdata.create
+      tags:
+        - TestData
+      summary: Create a new instance of testdata and add it to the testdata list
+      description: Create a new instance of testdata in the testdata list
+      parameters:
+        - name: t_data_instance
+          in: body
+          description: Traindata to create
+          required: True
+          schema:
+            type: object
+            properties:
+              DATA:
+                type: object
+                description: Array of train data to create
+      responses:
+        201:
+          description: Successfully created instance of testdata in list
+
+  /testdata/{req_id}:
+    put:
+      operationId: testdata.test_start
+      tags:
+      - TestData
+      summary: Update a testdata instance in the testdata list
+      description: Update a testdata instance in the testdata list
+      parameters:
+      - name: req_id
+        in: path
+        description: ID of request
+        type: string
+        required: True
+      responses:
+        200:
+          description: Successfully updated person in people list
+
+    post:
+      operationId: testdata.completed
+      tags:
+      - TestData
+      summary: Receive test result
+      description: Receive test result
+      parameters:
+      - name: req_id
+        in: path
+        description: ID of request
+        type: string
+        required: True
+      - name: t_data_res
+        in: body
+        description: Traindata to create
+        required: True
+        schema:
+          type: object
+          properties:
+            DATA:
+              type: object
+              description: Array of test data results
+      responses:
+        201:
+          description: Successfully received test data results
+
+  /testres:
+    get:
+      operationId: testdata.read_all_res
+      tags:
+      - TestData
+      summary: Read the entire list of testdata
+      description: Read the list of testdata
+      parameters:
+      - name: length
+        in: query
+        type: integer
+        description: Number of testdata to get from testdata
+        required: false
+      - name: offset
+        in: query
+        type: integer
+        description: Offset from beginning of list where to start gathering testdata
+        required: false
+      responses:
+        200:
+          description: Successfully read testdata list operation
+          schema:
+            type: object
+            items:
+              properties:
+                req_id:
+                  type: string
+                mongo_id:
+                  type: object
