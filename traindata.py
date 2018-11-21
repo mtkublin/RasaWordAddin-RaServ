@@ -26,7 +26,7 @@ def create(t_data_instance):
     req_id = 0
     for key in TRAIN_DATA:
         req_id += 1
-    req_id = str(req_id)
+    req_id = "train_" + str(req_id)
     t_data = t_data_instance.get("DATA", None)
     if req_id not in TRAIN_DATA and req_id is not None:
         mongo_id = mongo_import(json_obj=t_data)

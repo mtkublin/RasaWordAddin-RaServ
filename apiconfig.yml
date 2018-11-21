@@ -82,7 +82,7 @@ paths:
 
   /testdata:
     get:
-      operationId: testdata.read_all
+      operationId: testdata.test_read_all
       tags:
         - TestData
       summary: Read the entire list of testdata
@@ -111,7 +111,7 @@ paths:
                   type: object
 
     post:
-      operationId: testdata.create
+      operationId: testdata.test_create
       tags:
         - TestData
       summary: Create a new instance of testdata and add it to the testdata list
@@ -149,7 +149,7 @@ paths:
           description: Successfully updated person in people list
 
     post:
-      operationId: testdata.completed
+      operationId: testdata.test_completed
       tags:
       - TestData
       summary: Receive test result
@@ -176,7 +176,7 @@ paths:
 
   /testres:
     get:
-      operationId: testdata.read_all_res
+      operationId: testdata.test_read_all_res
       tags:
       - TestData
       summary: Read the entire list of testdata
@@ -203,3 +203,24 @@ paths:
                   type: string
                 mongo_id:
                   type: object
+
+  /testres/{req_id}:
+    get:
+      operationId: testdata.test_read_one_res
+      tags:
+      - TestData
+      summary: Read one test data result, by request id
+      description: Read one test data result, by request id
+      parameters:
+      - name: req_id
+        in: path
+        description: ID of request
+        type: string
+        required: True
+      responses:
+        200:
+          description: Successfully read one test data result
+          schema:
+            properties:
+              req_id:
+                type: array
