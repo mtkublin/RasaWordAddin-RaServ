@@ -1,5 +1,5 @@
 from flask import abort
-from mongo_import import mongo_import, mongo_get
+from mongo_utils import mongo_import, mongo_get
 import queue
 import requests
 
@@ -63,7 +63,7 @@ def train_read_all():
     return [TRAIN_DATA[key] for key in sorted(TRAIN_DATA.keys())]
 
 
-# TEST --------------------------------------------------------------------------------------------------------------------
+# TEST ----------------------------------------------------------------------------------------------------------------
 
 
 def test_create(t_data_instance):
@@ -117,7 +117,7 @@ def test_completed(req_id, t_data_res):
     TEST_DATA[req_id]["status"] = statuses.COMPLETED
     print("STARTED: " + str(started))
 
-    TEST_DATA_RES[req_id] = res_doc["RESULT"]
+    TEST_DATA_RES[req_id] = res_doc
 
     return TEST_DATA_RES[req_id]
 
