@@ -20,10 +20,10 @@ started = {"isStarted": None}
 
 
 def train_create(t_data_instance):
-    req_id = 0
+    req_id_nr = 0
     for key in TRAIN_DATA:
-        req_id += 1
-    req_id = "train_" + str(req_id)
+        req_id_nr += 1
+    req_id = "train_" + str(req_id_nr)
     t_data = t_data_instance.get("DATA", None)
     if req_id not in TRAIN_DATA and req_id is not None:
         mongo_id = mongo_import(json_obj=t_data)
@@ -67,10 +67,10 @@ def train_read_all():
 
 
 def test_create(t_data_instance):
-    req_id = 0
+    req_id_nr = 0
     for key in TEST_DATA:
-        req_id += 1
-    req_id = "test_" + str(req_id)
+        req_id_nr += 1
+    req_id = "test_" + str(req_id_nr)
     t_data = t_data_instance.get("DATA", None)
     if req_id not in TEST_DATA and req_id is not None:
         # mongo_id = mongo_import(json_obj=t_data, coll_name="unprocessed_test_data")
