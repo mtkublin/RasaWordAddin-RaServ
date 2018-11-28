@@ -224,3 +224,72 @@ paths:
             properties:
               req_id:
                 type: array
+
+  /projects:
+    get:
+      operationId: operations.get_all_projects
+      tags:
+      - ProjList
+      summary: Get available projects list
+      description: Get available projects list
+      parameters:
+      - name: length
+        in: query
+        type: integer
+        description: Number of projects to get from proj_list
+        required: false
+      responses:
+        200:
+          description: Successfully read testdata list operation
+          schema:
+            properties:
+              proj_list:
+                type: array
+
+  /models/{project}:
+    get:
+      operationId: operations.get_all_models
+      tags:
+      - ModelsList
+      summary: Get available models list
+      description: Get available models list
+      parameters:
+      - name: project
+        in: path
+        description: Project name
+        type: string
+        required: True
+      - name: length
+        in: query
+        type: integer
+        description: Number of models to get from proj_list
+        required: false
+      responses:
+        200:
+          description: Successfully read models list operation
+          schema:
+            properties:
+              models_list:
+                type: array
+
+  /interpreter/{project}/{model}:
+    post:
+      operationId: operations.update_interpreter
+      tags:
+      - Interpreter
+      summary: Load interpreter
+      description: Load interpreter
+      parameters:
+      - name: project
+        in: path
+        description: Project name
+        type: string
+        required: True
+      - name: model
+        in: path
+        description: Model name
+        type: string
+        required: True
+      responses:
+        201:
+          description: Successfully loaded interpreter

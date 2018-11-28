@@ -19,6 +19,28 @@ task_queue = queue.Queue()
 started = {"isStarted": None}
 
 
+# PROJECTS AND MODELS --------------------------------------------------------------------------------------------------
+
+
+def get_all_projects():
+    r = requests.get(url="http://127.0.0.1:8000/api/projects")
+    proj_list = r.json()
+    return proj_list
+
+
+def get_all_models(project):
+    r = requests.get(url="http://127.0.0.1:8000/api/models/" + str(project))
+    models_list = r.json()
+    return models_list
+
+
+def update_interpreter(project, model):
+    r = requests.post(url="http://127.0.0.1:8000/api/interpreter/" + str(project) + '/' + str(model))
+
+
+# TRAIN ----------------------------------------------------------------------------------------------------------------
+
+
 def train_create(t_data_instance):
     req_id_nr = 0
     for key in TRAIN_DATA:
