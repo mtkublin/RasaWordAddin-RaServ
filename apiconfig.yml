@@ -41,6 +41,7 @@ paths:
                 mongo_id:
                   type: object
 
+  /traindata/{project}/{model}:
     post:
       operationId: operations.train_create
       tags:
@@ -48,6 +49,16 @@ paths:
       summary: Create a new instance of traindata and add it to the traindata list
       description: Create a new instance of traindata in the traindata list
       parameters:
+        - name: project
+          in: path
+          description: Project name
+          type: string
+          required: True
+        - name: model
+          in: path
+          description: Model name
+          type: string
+          required: True
         - name: t_data_instance
           in: body
           description: Traindata to create
@@ -272,7 +283,7 @@ paths:
               models_list:
                 type: array
 
-  /interpreter/{project}/{model}:
+  /interpreter/azure/{project}/{model}:
     post:
       operationId: operations.update_interpreter
       tags:
@@ -290,6 +301,38 @@ paths:
         description: Model name
         type: string
         required: True
+      responses:
+        201:
+          description: Successfully loaded interpreter
+
+  /interpreter/local/{project}/{model}:
+    post:
+      operationId: operations.update_interpreter_local
+      tags:
+      - Interpreter
+      summary: Load interpreter
+      description: Load interpreter
+      parameters:
+      - name: project
+        in: path
+        description: Project name
+        type: string
+        required: True
+      - name: model
+        in: path
+        description: Model name
+        type: string
+        required: True
+      - name: model_path
+        in: body
+        description: sdfasdf
+        required: True
+        schema:
+          type: object
+          properties:
+            DATA:
+              type: string
+              description: Array of ids
       responses:
         201:
           description: Successfully loaded interpreter

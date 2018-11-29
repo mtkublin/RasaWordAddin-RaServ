@@ -35,18 +35,25 @@ def get_all_models(project):
 
 
 def update_interpreter(project, model):
-    r = requests.post(url="http://127.0.0.1:8000/api/interpreter/" + str(project) + '/' + str(model))
+    uri = "http://127.0.0.1:8000/api/interpreter/azure/" + str(project) + '/' + str(model)
+    r = requests.post(url=uri)
 
+
+def update_interpreter_local(project, model, model_path):
+    uri = "http://127.0.0.1:8000/api/interpreter/local/" + str(project) + '/' + str(model)
+    r = requests.post(url=uri, json=model_path)
 
 # TRAIN ----------------------------------------------------------------------------------------------------------------
 
 
-def train_create(t_data_instance):
+def train_create(t_data_instance, project, model):
     req_id_nr = 0
     for key in TRAIN_DATA:
         req_id_nr += 1
     req_id = "train_" + str(req_id_nr)
-    t_data = t_data_instance.get("DATA", None)
+    t_data_all = t_data_instance.get("DATA", None)
+    t_data = {"rasa_nlu_data": t_data_all["rasa_nlu_data"]}
+
     if req_id not in TRAIN_DATA and req_id is not None:
         mongo_id = mongo_import(json_obj=t_data)
         TRAIN_DATA[req_id] = {
@@ -54,13 +61,17 @@ def train_create(t_data_instance):
             "mongo_id": mongo_id,
             "status": statuses.NEW
         }
+
+        if "ModelPath" in t_data_all.keys():
+            TRAIN_DATA[req_id]["model_path"] = t_data_all["ModelPath"]
+
         task_queue.put(req_id)
 
         if started["isStarted"] is None:
             started["isStarted"] = task_queue.get()
             print("JUST STARTED: " + str(started["isStarted"]))
             data_to_send = TRAIN_DATA[started["isStarted"]]
-            r = requests.post(url="http://127.0.0.1:8000/api/train",
+            r = requests.post(url="http://127.0.0.1:8000/api/train/" + str(project) + "/" + str(model),
                               json={"DATA": data_to_send})
             print("POST: " + r.text)
         else:
