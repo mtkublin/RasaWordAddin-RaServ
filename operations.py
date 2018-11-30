@@ -2,6 +2,8 @@ from flask import abort
 from mongo_utils import mongo_import, mongo_get
 import queue
 import requests
+import uuid
+import json
 
 
 class statuses():
@@ -34,13 +36,13 @@ def get_all_models(project):
     return models_list
 
 
-def update_interpreter(project, model):
-    uri = "http://127.0.0.1:8000/api/interpreter/azure/" + str(project) + '/' + str(model)
+def update_interpreter(project, model, force):
+    uri = "http://127.0.0.1:8000/api/interpreter/azure/" + str(project) + '/' + str(model) + '/' + str(force)
     r = requests.post(url=uri)
 
 
-def update_interpreter_local(project, model, model_path):
-    uri = "http://127.0.0.1:8000/api/interpreter/local/" + str(project) + '/' + str(model)
+def update_interpreter_local(project, model, force, model_path):
+    uri = "http://127.0.0.1:8000/api/interpreter/local/" + str(project) + '/' + str(model) + '/' + str(force)
     r = requests.post(url=uri, json=model_path)
 
 # TRAIN ----------------------------------------------------------------------------------------------------------------
@@ -55,15 +57,28 @@ def train_create(t_data_instance, project, model):
     t_data = {"rasa_nlu_data": t_data_all["rasa_nlu_data"]}
 
     if req_id not in TRAIN_DATA and req_id is not None:
-        mongo_id = mongo_import(json_obj=t_data)
-        TRAIN_DATA[req_id] = {
-            "req_id": req_id,
-            "mongo_id": mongo_id,
-            "status": statuses.NEW
-        }
 
-        if "ModelPath" in t_data_all.keys():
-            TRAIN_DATA[req_id]["model_path"] = t_data_all["ModelPath"]
+        if t_data_all["ModelPath"] is not None:
+            data_id = str(uuid.uuid1())
+            data_path = t_data_all["ModelPath"]
+            f = open(data_path + "\\TRAIN_DATA\\" + data_id + ".json", "w")
+            json.dump(t_data, f)
+            f.close()
+
+            TRAIN_DATA[req_id] = {
+                "req_id": req_id,
+                "model_path": data_path,
+                "data_id": data_id,
+                "status": statuses.NEW,
+            }
+
+        else:
+            mongo_id = mongo_import(json_obj=t_data)
+            TRAIN_DATA[req_id] = {
+                "req_id": req_id,
+                "mongo_id": mongo_id,
+                "status": statuses.NEW,
+            }
 
         task_queue.put(req_id)
 

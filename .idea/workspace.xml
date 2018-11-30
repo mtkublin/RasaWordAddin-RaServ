@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="65ef49f1-45c2-4337-b07b-7925abde2212" name="Default Changelist" comment="" />
+    <list default="true" id="65ef49f1-45c2-4337-b07b-7925abde2212" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apiconfig.yml" beforeDir="false" afterPath="$PROJECT_DIR$/apiconfig.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/operations.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +29,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="html" value="2" />
-          <entry key="py" value="54" />
+          <entry key="py" value="55" />
           <entry key="pyi" value="1" />
           <entry key="txt" value="3" />
           <entry key="unprocessed_test_data" value="2" />
@@ -37,7 +41,7 @@
           <entry key="HTML" value="2" />
           <entry key="JSON" value="2" />
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Python" value="54" />
+          <entry key="Python" value="55" />
           <entry key="PythonStub" value="1" />
           <entry key="YAML" value="12" />
         </counts>
@@ -46,10 +50,10 @@
         <counts>
           <entry key="dummy" value="15" />
           <entry key="html" value="35" />
-          <entry key="py" value="3583" />
+          <entry key="py" value="3961" />
           <entry key="txt" value="42" />
           <entry key="unprocessed_test_data" value="10" />
-          <entry key="yml" value="831" />
+          <entry key="yml" value="872" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -57,8 +61,8 @@
           <entry key="HTML" value="35" />
           <entry key="JSON" value="10" />
           <entry key="PLAIN_TEXT" value="57" />
-          <entry key="Python" value="3583" />
-          <entry key="YAML" value="831" />
+          <entry key="Python" value="3961" />
+          <entry key="YAML" value="872" />
         </counts>
       </usages-collector>
     </session>
@@ -77,23 +81,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apiconfig.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10">
-              <caret line="70" column="58" selection-start-line="70" selection-start-column="58" selection-end-line="70" selection-end-column="58" />
+            <state relative-caret-position="559">
+              <caret line="334" column="22" selection-start-line="334" selection-start-column="22" selection-end-line="334" selection-end-column="22" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/operations.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11">
-              <caret line="65" column="42" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="42" />
+            <state relative-caret-position="1">
+              <caret line="60" column="41" selection-start-line="60" selection-start-column="41" selection-end-line="60" selection-end-column="41" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
-                <marker date="1543514890629" expanded="true" signature="484:1239" ph="..." />
+                <marker date="1543601943108" expanded="true" signature="508:1315" ph="..." />
               </folding>
             </state>
           </provider>
@@ -152,6 +156,7 @@
         <option value="$PROJECT_DIR$/sfdfsad.py" />
         <option value="$PROJECT_DIR$/application.py" />
         <option value="$PROJECT_DIR$/apiconfig.yml" />
+        <option value="$PROJECT_DIR$/qtest.py" />
         <option value="$PROJECT_DIR$/operations.py" />
       </list>
     </option>
@@ -190,7 +195,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../raserv" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -205,7 +210,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.application">
+  <component name="RunManager" selected="Python.qtest">
     <configuration name="application" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="python_app" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -248,7 +253,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="q_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="qtest" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="python_app" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -260,7 +265,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/q_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/qtest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -312,19 +317,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.q_test" />
       <item itemvalue="Python.application" />
       <item itemvalue="Python.mongo_import" />
       <item itemvalue="Python.traindata" />
       <item itemvalue="Python.sfdfsad" />
+      <item itemvalue="Python.qtest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.qtest" />
         <item itemvalue="Python.application" />
         <item itemvalue="Python.sfdfsad" />
         <item itemvalue="Python.traindata" />
         <item itemvalue="Python.mongo_import" />
-        <item itemvalue="Python.q_test" />
       </list>
     </recent_temporary>
   </component>
@@ -349,7 +354,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.79441625" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.8604061" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.38678223" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -526,21 +531,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/operations.py">
+    <entry file="file://$PROJECT_DIR$/apiconfig.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11">
-          <caret line="65" column="42" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <marker date="1543514890629" expanded="true" signature="484:1239" ph="..." />
-          </folding>
+        <state relative-caret-position="559">
+          <caret line="334" column="22" selection-start-line="334" selection-start-column="22" selection-end-line="334" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apiconfig.yml">
+    <entry file="file://$PROJECT_DIR$/qtest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10">
-          <caret line="70" column="58" selection-start-line="70" selection-start-column="58" selection-end-line="70" selection-end-column="58" />
+        <state relative-caret-position="153">
+          <caret line="9" column="14" lean-forward="true" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/operations.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1">
+          <caret line="60" column="41" selection-start-line="60" selection-start-column="41" selection-end-line="60" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+            <marker date="1543601943108" expanded="true" signature="508:1315" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

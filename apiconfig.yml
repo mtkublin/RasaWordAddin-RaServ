@@ -283,7 +283,7 @@ paths:
               models_list:
                 type: array
 
-  /interpreter/azure/{project}/{model}:
+  /interpreter/azure/{project}/{model}/{force}:
     post:
       operationId: operations.update_interpreter
       tags:
@@ -301,11 +301,16 @@ paths:
         description: Model name
         type: string
         required: True
+      - name: force
+        in: path
+        description: Force interpreter update
+        type: string
+        required: True
       responses:
         201:
           description: Successfully loaded interpreter
 
-  /interpreter/local/{project}/{model}:
+  /interpreter/local/{project}/{model}/{force}:
     post:
       operationId: operations.update_interpreter_local
       tags:
@@ -321,6 +326,11 @@ paths:
       - name: model
         in: path
         description: Model name
+        type: string
+        required: True
+      - name: force
+        in: path
+        description: Force interpreter update
         type: string
         required: True
       - name: model_path
