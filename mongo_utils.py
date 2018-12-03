@@ -19,6 +19,7 @@ def mongo_import(json_obj, uri = uri, db_name = db_name, coll_name = 'train_data
     obj_id = str(json_obj_copy['_id'])
     return obj_id
 
+
 def mongo_get(mongo_id, u=uri, db_n=db_name, coll_n='train_data'):
     client = MongoClient(u)
     db = client[db_n]
@@ -27,3 +28,4 @@ def mongo_get(mongo_id, u=uri, db_n=db_name, coll_n='train_data'):
     doc = coll.find_one({"_id": ObjectId(mongo_id)})
 
     return doc
+

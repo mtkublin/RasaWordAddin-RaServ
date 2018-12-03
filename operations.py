@@ -1,9 +1,27 @@
 from flask import abort
-from mongo_utils import mongo_import, mongo_get
+from rasa_nlu.persistor import AzurePersistor
+from mongo_utils import mongo_import
+from RaServ import UpdateInterpreterThread, TrainThread, TestThread, ThreadKiller
+from threading import Lock, Event
 import queue
+import warnings
 import requests
 import uuid
 import json
+
+lock = Lock()
+waiting_event = Event()
+
+warnings.filterwarnings(module='h5py*', action='ignore', category=FutureWarning)
+
+
+persistor = AzurePersistor(azure_container= 'rasa-models-test-container', azure_account_name= 'csb6965281488a3x4dd7xbcd',
+                           azure_account_key= 'ZT4DVNgFfQrbglJXzUX2HuPi6KYysL3b2zxdNlL11umXg811fptnTcubKQ83itTLDAmSdmfqgpiJWylbfumTDQ==')
+
+interpreter_dict = {"current_project": "", "current_model": "", "interpreters": {}}
+
+TRAINING_DOCS = {}
+TEST_DOCS = {}
 
 
 class statuses():
@@ -19,31 +37,46 @@ TEST_DATA = {}
 TEST_DATA_RES = {}
 task_queue = queue.Queue()
 started = {"isStarted": None}
-
+threads = {}
 
 # PROJECTS AND MODELS --------------------------------------------------------------------------------------------------
 
 
+# def get_all_projects():
+#     r = requests.get(url="http://127.0.0.1:8000/api/projects")
+#     proj_list = r.json()
+#     return proj_list
+#
+#
+# def get_all_models(project):
+#     r = requests.get(url="http://127.0.0.1:8000/api/models/" + str(project))
+#     models_list = r.json()
+#     return models_list
+#
+#
+# def update_interpreter_local(project, model, force, model_path):
+#     uri = "http://127.0.0.1:8000/api/interpreter/local/" + str(project) + '/' + str(model) + '/' + str(force)
+#     r = requests.post(url=uri, json=model_path)
+
+
 def get_all_projects():
-    r = requests.get(url="http://127.0.0.1:8000/api/projects")
-    proj_list = r.json()
-    return proj_list
+    projects_list = persistor.list_projects()
+    return projects_list
 
 
 def get_all_models(project):
-    r = requests.get(url="http://127.0.0.1:8000/api/models/" + str(project))
-    models_list = r.json()
+    models_list = persistor.list_models(project)
     return models_list
 
 
-def update_interpreter(project, model, force):
-    uri = "http://127.0.0.1:8000/api/interpreter/azure/" + str(project) + '/' + str(model) + '/' + str(force)
-    r = requests.post(url=uri)
+def update_interpreter(project, model, force, model_path):
+    print(interpreter_dict)
+    thread_id = str(uuid.uuid1())
+    threads[thread_id] = UpdateInterpreterThread(lock, waiting_event, interpreter_dict, model, project, force, persistor, model_path)
+    threads[thread_id].start()
+    ThreadKiller(waiting_event, threads, thread_id).start()
+    return "Succesfuly updated interpreter", 201
 
-
-def update_interpreter_local(project, model, force, model_path):
-    uri = "http://127.0.0.1:8000/api/interpreter/local/" + str(project) + '/' + str(model) + '/' + str(force)
-    r = requests.post(url=uri, json=model_path)
 
 # TRAIN ----------------------------------------------------------------------------------------------------------------
 

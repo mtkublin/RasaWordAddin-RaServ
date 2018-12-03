@@ -283,36 +283,9 @@ paths:
               models_list:
                 type: array
 
-  /interpreter/azure/{project}/{model}/{force}:
+  /interpreter/{project}/{model}/{force}:
     post:
       operationId: operations.update_interpreter
-      tags:
-      - Interpreter
-      summary: Load interpreter
-      description: Load interpreter
-      parameters:
-      - name: project
-        in: path
-        description: Project name
-        type: string
-        required: True
-      - name: model
-        in: path
-        description: Model name
-        type: string
-        required: True
-      - name: force
-        in: path
-        description: Force interpreter update
-        type: string
-        required: True
-      responses:
-        201:
-          description: Successfully loaded interpreter
-
-  /interpreter/local/{project}/{model}/{force}:
-    post:
-      operationId: operations.update_interpreter_local
       tags:
       - Interpreter
       summary: Load interpreter
@@ -336,7 +309,7 @@ paths:
       - name: model_path
         in: body
         description: sdfasdf
-        required: True
+        required: False
         schema:
           type: object
           properties:
@@ -346,3 +319,67 @@ paths:
       responses:
         201:
           description: Successfully loaded interpreter
+
+#  /interpreter/azure/{project}/{model}/{force}:
+#    post:
+#      operationId: operations.update_interpreter
+#      tags:
+#      - Interpreter
+#      summary: Load interpreter
+#      description: Load interpreter
+#      parameters:
+#      - name: project
+#        in: path
+#        description: Project name
+#        type: string
+#        required: True
+#      - name: model
+#        in: path
+#        description: Model name
+#        type: string
+#        required: True
+#      - name: force
+#        in: path
+#        description: Force interpreter update
+#        type: string
+#        required: True
+#      responses:
+#        201:
+#          description: Successfully loaded interpreter
+
+#  /interpreter/local/{project}/{model}/{force}:
+#    post:
+#      operationId: operations.update_interpreter_local
+#      tags:
+#      - Interpreter
+#      summary: Load interpreter
+#      description: Load interpreter
+#      parameters:
+#      - name: project
+#        in: path
+#        description: Project name
+#        type: string
+#        required: True
+#      - name: model
+#        in: path
+#        description: Model name
+#        type: string
+#        required: True
+#      - name: force
+#        in: path
+#        description: Force interpreter update
+#        type: string
+#        required: True
+#      - name: model_path
+#        in: body
+#        description: sdfasdf
+#        required: False
+#        schema:
+#          type: object
+#          properties:
+#            DATA:
+#              type: string
+#              description: Array of ids
+#      responses:
+#        201:
+#          description: Successfully loaded interpreter
