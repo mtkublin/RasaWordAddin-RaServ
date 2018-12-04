@@ -41,6 +41,7 @@ paths:
                 mongo_id:
                   type: object
 
+
   /traindata/{project}/{model}:
     post:
       operationId: operations.train_create
@@ -70,108 +71,60 @@ paths:
                 type: object
                 description: Array of train data to create
       responses:
-        201:
-          description: Successfully created instance of traindata in list
+        200:
+          description: Training started
+          schema:
+            properties:
+              status:
+                type: string
 
-  /traindata/{req_id}:
-    put:
-      operationId: operations.train_completed
+
+  /traindata/isfinished/{req_id}:
+    get:
+      operationId: operations.train_is_finished
       tags:
       - TrainData
-      summary: Update a traindata instance in the traindata list
-      description: Update a traindata instance in the traindata list
+      summary: Read the entire list of traindata
+      description: Read the list of traindata
       parameters:
       - name: req_id
         in: path
-        description: ID of request
+        description: REQUEST ID
         type: string
         required: True
       responses:
         200:
-          description: Successfully updated person in people list
+          description: Successfully read traindata list operation
+          schema:
+            properties:
+              status:
+                type: string
+#    put:
+#      operationId: operations.train_completed
+#      tags:
+#      - TrainData
+#      summary: Update a traindata instance in the traindata list
+#      description: Update a traindata instance in the traindata list
+#      parameters:
+#      - name: req_id
+#        in: path
+#        description: ID of request
+#        type: string
+#        required: True
+#      responses:
+#        200:
+#          description: Successfully updated person in people list
 
 
   /testdata:
-    get:
-      operationId: operations.test_read_all
-      tags:
-        - TestData
-      summary: Read the entire list of testdata
-      description: Read the list of testdata
-      parameters:
-        - name: length
-          in: query
-          type: integer
-          description: Number of testdata to get from testdata
-          required: false
-        - name: offset
-          in: query
-          type: integer
-          description: Offset from beginning of list where to start gathering testdata
-          required: false
-      responses:
-        200:
-          description: Successfully read testdata list operation
-          schema:
-            type: object
-            items:
-              properties:
-                req_id:
-                  type: string
-                mongo_id:
-                  type: object
-
     post:
       operationId: operations.test_create
       tags:
-        - TestData
+      - TestData
       summary: Create a new instance of testdata and add it to the testdata list
       description: Create a new instance of testdata in the testdata list
       parameters:
-        - name: t_data_instance
-          in: body
-          description: Traindata to create
-          required: True
-          schema:
-            type: object
-            properties:
-              DATA:
-                type: object
-                description: Array of train data to create
-      responses:
-        201:
-          description: Successfully created instance of testdata in list
-
-  /testdata/{req_id}:
-    put:
-      operationId: operations.test_start
-      tags:
-      - TestData
-      summary: Update a testdata instance in the testdata list
-      description: Update a testdata instance in the testdata list
-      parameters:
-      - name: req_id
-        in: path
-        description: ID of request
-        type: string
-        required: True
-      responses:
-        200:
-          description: Successfully updated person in people list
-
-    post:
-      operationId: operations.test_completed
-      tags:
-      - TestData
-      summary: Receive test result
-      description: Receive test result
-      parameters:
-      - name: req_id
-        in: path
-        description: ID of request
-        type: string
-        required: True
-      - name: t_data_res
+      - name: t_data_instance
         in: body
         description: Traindata to create
         required: True
@@ -180,10 +133,86 @@ paths:
           properties:
             DATA:
               type: object
-              description: Array of test data results
+              description: Array of train data to create
       responses:
-        201:
-          description: Successfully received test data results
+        200:
+          description: Successfully read one test data result
+          schema:
+            properties:
+              req_id:
+                type: array
+#    get:
+#      operationId: operations.test_read_all
+#      tags:
+#        - TestData
+#      summary: Read the entire list of testdata
+#      description: Read the list of testdata
+#      parameters:
+#        - name: length
+#          in: query
+#          type: integer
+#          description: Number of testdata to get from testdata
+#          required: false
+#        - name: offset
+#          in: query
+#          type: integer
+#          description: Offset from beginning of list where to start gathering testdata
+#          required: false
+#      responses:
+#        200:
+#          description: Successfully read testdata list operation
+#          schema:
+#            type: object
+#            items:
+#              properties:
+#                req_id:
+#                  type: string
+#                mongo_id:
+#                  type: object
+
+
+#  /testdata/{req_id}:
+#    put:
+#      operationId: operations.test_start
+#      tags:
+#      - TestData
+#      summary: Update a testdata instance in the testdata list
+#      description: Update a testdata instance in the testdata list
+#      parameters:
+#      - name: req_id
+#        in: path
+#        description: ID of request
+#        type: string
+#        required: True
+#      responses:
+#        200:
+#          description: Successfully updated testdata instance in the testdata list
+
+#    post:
+#      operationId: operations.test_completed
+#      tags:
+#      - TestData
+#      summary: Receive test result
+#      description: Receive test result
+#      parameters:
+#      - name: req_id
+#        in: path
+#        description: ID of request
+#        type: string
+#        required: True
+#      - name: t_data_res
+#        in: body
+#        description: Traindata to create
+#        required: True
+#        schema:
+#          type: object
+#          properties:
+#            DATA:
+#              type: object
+#              description: Array of test data results
+#      responses:
+#        201:
+#          description: Successfully received test data results
 
   /testres:
     get:
@@ -214,27 +243,27 @@ paths:
                   type: string
                 mongo_id:
                   type: object
-
-  /testres/{req_id}:
-    get:
-      operationId: operations.test_read_one_res
-      tags:
-      - TestData
-      summary: Read one test data result, by request id
-      description: Read one test data result, by request id
-      parameters:
-      - name: req_id
-        in: path
-        description: ID of request
-        type: string
-        required: True
-      responses:
-        200:
-          description: Successfully read one test data result
-          schema:
-            properties:
-              req_id:
-                type: array
+#
+#  /testres/{req_id}:
+#    get:
+#      operationId: operations.test_read_one_res
+#      tags:
+#      - TestData
+#      summary: Read one test data result, by request id
+#      description: Read one test data result, by request id
+#      parameters:
+#      - name: req_id
+#        in: path
+#        description: ID of request
+#        type: string
+#        required: True
+#      responses:
+#        200:
+#          description: Successfully read one test data result
+#          schema:
+#            properties:
+#              req_id:
+#                type: array
 
   /projects:
     get:
@@ -345,68 +374,3 @@ paths:
             properties:
               status:
                 type: string
-
-
-#  /interpreter/azure/{project}/{model}/{force}:
-#    post:
-#      operationId: operations.update_interpreter
-#      tags:
-#      - Interpreter
-#      summary: Load interpreter
-#      description: Load interpreter
-#      parameters:
-#      - name: project
-#        in: path
-#        description: Project name
-#        type: string
-#        required: True
-#      - name: model
-#        in: path
-#        description: Model name
-#        type: string
-#        required: True
-#      - name: force
-#        in: path
-#        description: Force interpreter update
-#        type: string
-#        required: True
-#      responses:
-#        201:
-#          description: Successfully loaded interpreter
-
-#  /interpreter/local/{project}/{model}/{force}:
-#    post:
-#      operationId: operations.update_interpreter_local
-#      tags:
-#      - Interpreter
-#      summary: Load interpreter
-#      description: Load interpreter
-#      parameters:
-#      - name: project
-#        in: path
-#        description: Project name
-#        type: string
-#        required: True
-#      - name: model
-#        in: path
-#        description: Model name
-#        type: string
-#        required: True
-#      - name: force
-#        in: path
-#        description: Force interpreter update
-#        type: string
-#        required: True
-#      - name: model_path
-#        in: body
-#        description: sdfasdf
-#        required: False
-#        schema:
-#          type: object
-#          properties:
-#            DATA:
-#              type: string
-#              description: Array of ids
-#      responses:
-#        201:
-#          description: Successfully loaded interpreter
