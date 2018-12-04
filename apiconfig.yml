@@ -309,7 +309,7 @@ paths:
       - name: model_path
         in: body
         description: sdfasdf
-        required: False
+        required: True
         schema:
           type: object
           properties:
@@ -319,6 +319,33 @@ paths:
       responses:
         201:
           description: Successfully loaded interpreter
+
+  /interpreter/isloaded/{project}/{model}:
+    get:
+      operationId: operations.interpreter_is_loaded
+      tags:
+      - Interpreter
+      summary: Check if interpreter is loaded
+      description: Check if interpreter is loaded
+      parameters:
+      - name: project
+        in: path
+        description: Project name
+        type: string
+        required: True
+      - name: model
+        in: path
+        description: Model name
+        type: string
+        required: True
+      responses:
+        200:
+          description: Checked
+          schema:
+            properties:
+              status:
+                type: string
+
 
 #  /interpreter/azure/{project}/{model}/{force}:
 #    post:

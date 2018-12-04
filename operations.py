@@ -75,7 +75,17 @@ def update_interpreter(project, model, force, model_path):
     threads[thread_id] = UpdateInterpreterThread(lock, waiting_event, interpreter_dict, model, project, force, persistor, model_path)
     threads[thread_id].start()
     ThreadKiller(waiting_event, threads, thread_id).start()
-    return "Succesfuly updated interpreter", 201
+    return "Successfully updated interpreter", 201
+
+
+def interpreter_is_loaded(project, model):
+    print(interpreter_dict)
+    if project in interpreter_dict["interpreters"].keys() and model in interpreter_dict["interpreters"][project].keys() \
+            and interpreter_dict["current_project"] == project and interpreter_dict["current_model"] == model:
+        response = "True"
+    else:
+        response = "False"
+    return response
 
 
 # TRAIN ----------------------------------------------------------------------------------------------------------------
