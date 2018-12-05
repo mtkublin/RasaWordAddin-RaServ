@@ -2,11 +2,13 @@ from rasa_nlu.model import Trainer
 from rasa_nlu.model import Interpreter
 from rasa_nlu.training_data.formats import RasaReader
 from rasa_nlu import config
-from mongo_utils import mongo_get
+from mongo_utils import MongoHandler
 import warnings
 import os
 import shutil
 import threading
+
+warnings.filterwarnings(module='h5py*', action='ignore', category=FutureWarning)
 
 
 class statuses():
@@ -17,7 +19,9 @@ class statuses():
     ERROR = "error"
 
 
-warnings.filterwarnings(module='h5py*', action='ignore', category=FutureWarning)
+uri = "mongodb://mtkublin:dVyBCQYJkUpFNbph85YLPg54SNa3m4gFnXzq0l8T4GvSVx8QlyZstb1urTKVaOtxoUzT5dLfYQcuQNL6ytNEzA==@mtkublin.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+db_name = 'train_data_test'
+mongo = MongoHandler(uri, db_name)
 
 
 class TrainThread(threading.Thread):
@@ -29,49 +33,13 @@ class TrainThread(threading.Thread):
         self.model_name = model_name
         self.persistor = persistor
         self.TRAIN_DATA = TRAIN_DATA
-        # self.TRAINING_DOCS = TRAINING_DOCS
 
         threading.Thread.__init__(self)
 
     def run(self):
         self.lock.acquire()
-
-        req_id = self.training_data["req_id"]
-
-        if "model_path" in self.training_data.keys():
-            model_path = self.training_data["model_path"]
-            data_id = self.training_data["data_id"]
-            f = open(model_path + "\\TRAIN_DATA\\" + data_id + ".json", "r")
-            train_doc = eval(f.read())
-            f.close()
-            train_model(self.interpreter_dict, self.persistor, train_doc, self.project_name, self.model_name, model_path)
-
-        else:
-            mongo_id = self.training_data["mongo_id"]
-            doc = mongo_get(mongo_id)
-            # self.TRAINING_DOCS[mongo_id] = doc["rasa_nlu_data"]
-            # train_doc = {"rasa_nlu_data": self.TRAINING_DOCS[mongo_id]}
-            train_doc = {"rasa_nlu_data": doc["rasa_nlu_data"]}
-            train_model(self.interpreter_dict, self.persistor, train_doc, self.project_name, self.model_name)
-
-        # r = requests.put(url="http://127.0.0.1:6000/api/traindata/" + str(req_id))
-        # print(r)
-        self.TRAIN_DATA[req_id]["status"] = statuses.COMPLETED
+        initiate_training(self.training_data, self.project_name, self.model_name, self.interpreter_dict, self.persistor, self.TRAIN_DATA)
         self.lock.release()
-
-# class TestThread(threading.Thread):
-#     def __init__(self, lock, interpreter_dict, test_data, TEST_DOCS, TEST_DATA_RES):
-#         threading.Thread.__init__(self)
-#         self.lock = lock
-#         self.test_data = test_data
-#         self.TEST_DOCS = TEST_DOCS
-#         self.interpreter_dict = interpreter_dict
-#         self.TEST_DATA_RES = TEST_DATA_RES
-#
-#     def run(self):
-#         self.lock.acquire()
-#         test_with_model(self.interpreter_dict, self.test_data, self.TEST_DOCS, self.TEST_DATA_RES)
-#         self.lock.release()
 
 
 class UpdateInterpreterThread(threading.Thread):
@@ -92,7 +60,7 @@ class UpdateInterpreterThread(threading.Thread):
         self.lock.release()
 
 
-# RASA ----------------------------------------------------------------------------------------------------------------
+# LOAD ----------------------------------------------------------------------------------------------------------------
 
 
 def load_interpreter(interpreter_dict, model_name, project_name, force, persistor, model_path):
@@ -113,11 +81,9 @@ def load_interpreter(interpreter_dict, model_name, project_name, force, persisto
             print(new_model_path)
 
         print("Loading interpreter")
-        warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
         warnings.filterwarnings(module='rasa_nlu*', action='ignore', category=UserWarning)
         interpreter = Interpreter.load(new_model_path)
         warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
-        warnings.filterwarnings(module='rasa_nlu*', action='ignore', category=UserWarning)
         print("Loaded")
 
         if model_path["DATA"] == "":
@@ -128,11 +94,33 @@ def load_interpreter(interpreter_dict, model_name, project_name, force, persisto
         else:
             interpreter_dict["interpreters"][project_name][model_name] = interpreter
 
-        interpreter_dict["current_project"] = project_name
-        interpreter_dict["current_model"] = model_name
-
     interpreter_dict["current_project"] = project_name
     interpreter_dict["current_model"] = model_name
+
+
+# TRAIN ----------------------------------------------------------------------------------------------------------------
+
+
+def initiate_training(training_data, project_name, model_name, interpreter_dict, persistor, TRAIN_DATA):
+    req_id = training_data["req_id"]
+
+    if "model_path" in training_data.keys():
+        model_path = training_data["model_path"]
+        data_id = training_data["data_id"]
+        f = open("%s\\TRAIN_DATA\\%s\\%s_%s.json" % (model_path, project_name, data_id, model_name), "r")
+        train_doc = eval(f.read())
+        f.close()
+        TRAIN_DATA[req_id]["status"] = statuses.STARTED
+        train_model(interpreter_dict, persistor, train_doc, project_name, model_name, model_path)
+
+    else:
+        mongo_id = training_data["mongo_id"]
+        doc = mongo.mongo_get(mongo_id)
+        train_doc = {"rasa_nlu_data": doc["rasa_nlu_data"]}
+        TRAIN_DATA[req_id]["status"] = statuses.STARTED
+        train_model(interpreter_dict, persistor, train_doc, project_name, model_name)
+
+    TRAIN_DATA[req_id]["status"] = statuses.COMPLETED
 
 
 def train_model(interpreter_dict, persistor, json_data, proj_name, mod_name, model_path = None):
@@ -156,11 +144,13 @@ def train_model(interpreter_dict, persistor, json_data, proj_name, mod_name, mod
     interpreter_dict["current_model"] = mod_name
 
 
+# TEST ----------------------------------------------------------------------------------------------------------------
+
+
 def test_with_model(interpreter_dict, test_data, TEST_DATA, TEST_DATA_RES):
     req_id = test_data["req_id"]
     doc = test_data["test_data"]
-    TEST_DATA[req_id] = {"req_id": req_id,
-                              "SENTS": doc["SENTS"]}
+    TEST_DATA[req_id] = {"req_id": req_id, "SENTS": doc["SENTS"]}
 
     print("Proceeding to test:", req_id)
 
@@ -178,13 +168,3 @@ def test_with_model(interpreter_dict, test_data, TEST_DATA, TEST_DATA_RES):
     TEST_DATA_RES[req_id] = {"req_id": req_id, "result": res_list}
 
     print("Test ", req_id, ": FINISHED")
-
-
-# def get_projects_list(persistor):
-#     projects_list = persistor.list_projects()
-#     return projects_list
-#
-#
-# def get_models_list(persistor, project):
-#     models_list = persistor.list_models(project)
-#     return models_list
