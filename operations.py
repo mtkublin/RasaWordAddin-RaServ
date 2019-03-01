@@ -12,8 +12,9 @@ warnings.filterwarnings(module='h5py*', action='ignore', category=FutureWarning)
 
 lock = Lock()
 waiting_event = Event()
-persistor = AzurePersistor(azure_container= 'rasa-models-test-container', azure_account_name= 'csb6965281488a3x4dd7xbcd',
-                           azure_account_key= 'ZT4DVNgFfQrbglJXzUX2HuPi6KYysL3b2zxdNlL11umXg811fptnTcubKQ83itTLDAmSdmfqgpiJWylbfumTDQ==')
+# persistor = AzurePersistor(azure_container= 'rasa-models-test-container', azure_account_name= 'csb6965281488a3x4dd7xbcd',
+#                            azure_account_key= 'ZT4DVNgFfQrbglJXzUX2HuPi6KYysL3b2zxdNlL11umXg811fptnTcubKQ83itTLDAmSdmfqgpiJWylbfumTDQ==')
+persistor = None
 uri = "mongodb://mtkublin:dVyBCQYJkUpFNbph85YLPg54SNa3m4gFnXzq0l8T4GvSVx8QlyZstb1urTKVaOtxoUzT5dLfYQcuQNL6ytNEzA==@mtkublin.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 db_name = 'train_data_test'
 mongo = MongoHandler(uri, db_name)

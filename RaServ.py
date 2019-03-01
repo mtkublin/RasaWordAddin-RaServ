@@ -51,7 +51,6 @@ class UpdateInterpreterThread(threading.Thread):
         self.force = force
         self.persistor = persistor
         self.model_path = model_path
-
         threading.Thread.__init__(self)
 
     def run(self):
@@ -123,10 +122,10 @@ def initiate_training(training_data, project_name, model_name, interpreter_dict,
     TRAIN_DATA[req_id]["status"] = statuses.COMPLETED
 
 
-def train_model(interpreter_dict, persistor, json_data, proj_name, mod_name, model_path = None):
+def train_model(interpreter_dict, persistor, json_data, proj_name, mod_name, model_path=None):
     reader = RasaReader()
     training_data = reader.read_from_json(json_data)
-    trainer = Trainer(config.load(".\\config.yml"))
+    trainer = Trainer(config.load(".\\trainer_config.yml"))
     interpreter = trainer.train(training_data)
     if model_path is None:
         os.mkdir('.\\temp_train_model')

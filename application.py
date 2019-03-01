@@ -1,14 +1,18 @@
-from flask import render_template
 import connexion
+import openapi_spec_validator
+import templates
+import venv
+import mongo_utils, operations, RaServ
 
 app = connexion.App(__name__, specification_dir="./")
 
-app.add_api("apiconfig.yml")
+app.add_api(".\\apiconfig.yml")
 
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return
+
 
 
 if __name__ == "__main__":
