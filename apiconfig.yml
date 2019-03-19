@@ -10,36 +10,36 @@ produces:
 
 basePath: /api
 
-paths:
-  /traindata:
-    get:
-      operationId: operations.train_read_all
-      tags:
-        - TrainData
-      summary: Read the entire list of traindata
-      description: Read the list of traindata
-      parameters:
-        - name: length
-          in: query
-          type: integer
-          description: Number of traindata to get from traindata
-          required: false
-        - name: offset
-          in: query
-          type: integer
-          description: Offset from beginning of list where to start gathering traindata
-          required: false
-      responses:
-        200:
-          description: Successfully read traindata list operation
-          schema:
-            type: object
-            items:
-              properties:
-                req_id:
-                  type: string
-                mongo_id:
-                  type: object
+#paths:
+#  /traindata:
+#    get:
+#      operationId: operations.train_read_all
+#      tags:
+#        - TrainData
+#      summary: Read the entire list of traindata
+#      description: Read the list of traindata
+#      parameters:
+#        - name: length
+#          in: query
+#          type: integer
+#          description: Number of traindata to get from traindata
+#          required: false
+#        - name: offset
+#          in: query
+#          type: integer
+#          description: Offset from beginning of list where to start gathering traindata
+#          required: false
+#      responses:
+#        200:
+#          description: Successfully read traindata list operation
+#          schema:
+#            type: object
+#            items:
+#              properties:
+#                req_id:
+#                  type: string
+#                mongo_id:
+#                  type: object
 
 
   /traindata/{project}/{model}:
@@ -126,82 +126,82 @@ paths:
               req_id:
                 type: array
 
-  /testres:
-    get:
-      operationId: operations.test_read_all_res
-      tags:
-      - TestData
-      summary: Read the entire list of testdata
-      description: Read the list of testdata
-      parameters:
-      - name: length
-        in: query
-        type: integer
-        description: Number of testdata to get from testdata
-        required: false
-      - name: offset
-        in: query
-        type: integer
-        description: Offset from beginning of list where to start gathering testdata
-        required: false
-      responses:
-        200:
-          description: Successfully read testdata list operation
-          schema:
-            type: object
-            items:
-              properties:
-                req_id:
-                  type: string
-                mongo_id:
-                  type: object
+#  /testres:
+#    get:
+#      operationId: operations.test_read_all_res
+#      tags:
+#      - TestData
+#      summary: Read the entire list of testdata
+#      description: Read the list of testdata
+#      parameters:
+#      - name: length
+#        in: query
+#        type: integer
+#        description: Number of testdata to get from testdata
+#        required: false
+#      - name: offset
+#        in: query
+#        type: integer
+#        description: Offset from beginning of list where to start gathering testdata
+#        required: false
+#      responses:
+#        200:
+#          description: Successfully read testdata list operation
+#          schema:
+#            type: object
+#            items:
+#              properties:
+#                req_id:
+#                  type: string
+#                mongo_id:
+#                  type: object
 
-  /projects:
-    get:
-      operationId: operations.get_all_projects
-      tags:
-      - ProjList
-      summary: Get available projects list
-      description: Get available projects list
-      parameters:
-      - name: length
-        in: query
-        type: integer
-        description: Number of projects to get from proj_list
-        required: false
-      responses:
-        200:
-          description: Successfully read testdata list operation
-          schema:
-            properties:
-              proj_list:
-                type: array
+#  /projects:
+#    get:
+#      operationId: operations.get_all_projects
+#      tags:
+#      - ProjList
+#      summary: Get available projects list
+#      description: Get available projects list
+#      parameters:
+#      - name: length
+#        in: query
+#        type: integer
+#        description: Number of projects to get from proj_list
+#        required: false
+#      responses:
+#        200:
+#          description: Successfully read testdata list operation
+#          schema:
+#            properties:
+#              proj_list:
+#                type: array
 
-  /models/{project}:
-    get:
-      operationId: operations.get_all_models
-      tags:
-      - ModelsList
-      summary: Get available models list
-      description: Get available models list
-      parameters:
-      - name: project
-        in: path
-        description: Project name
-        type: string
-        required: True
-      - name: length
-        in: query
-        type: integer
-        description: Number of models to get from proj_list
-        required: false
-      responses:
-        200:
-          description: Successfully read models list operation
-          schema:
-            properties:
-              models_list:
-                type: array
+#  /models/{project}:
+#    get:
+#      operationId: operations.get_all_models
+#      tags:
+#      - ModelsList
+#      summary: Get available models list
+#      description: Get available models list
+#      parameters:
+#      - name: project
+#        in: path
+#        description: Project name
+#        type: string
+#        required: True
+#      - name: length
+#        in: query
+#        type: integer
+#        description: Number of models to get from proj_list
+#        required: false
+#      responses:
+#        200:
+#          description: Successfully read models list operation
+#          schema:
+#            properties:
+#              models_list:
+#                type: array
 
   /interpreter/{project}/{model}/{force}:
     post:
