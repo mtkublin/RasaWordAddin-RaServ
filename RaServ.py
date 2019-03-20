@@ -2,7 +2,6 @@ from rasa_nlu.model import Trainer
 from rasa_nlu.model import Interpreter
 from rasa_nlu.training_data.formats import RasaReader
 from rasa_nlu import config
-from mongo_utils import MongoHandler
 import warnings
 import os
 import shutil
@@ -19,10 +18,6 @@ class statuses():
     ERROR = "error"
 
 
-# db_name = 'train_data_test'
-# mongo = MongoHandler(uri)
-
-
 class TrainThread(threading.Thread):
     def __init__(self, lock, interpreter_dict, training_data, project_name, model_name, persistor, TRAIN_DATA):
         self.__lock = lock
@@ -35,10 +30,47 @@ class TrainThread(threading.Thread):
 
         threading.Thread.__init__(self)
 
+    def __del__(self):
+        print("Deleting object")
+
     def run(self):
         self.__lock.acquire()
-        initiate_training(self.__training_data, self.__project_name, self.__model_name, self.__interpreter_dict, self.__persistor, self.__TRAIN_DATA)
+        self.initiate_training(self.__training_data, self.__project_name, self.__model_name, self.__interpreter_dict, self.__persistor, self.__TRAIN_DATA)
         self.__lock.release()
+
+    def initiate_training(self, training_data, project_name, model_name, interpreter_dict, persistor, TRAIN_DATA):
+        req_id = training_data["req_id"]
+
+        model_path = training_data["model_path"]
+        data_id = training_data["data_id"]
+        f = open("%s\\TRAIN_DATA\\%s\\%s_%s.json" % (model_path, project_name, data_id, model_name), "r")
+        train_doc = eval(f.read())
+        f.close()
+        TRAIN_DATA[req_id]["status"] = statuses.STARTED
+        self.train_model(self, interpreter_dict, persistor, train_doc, project_name, model_name, model_path)
+
+        TRAIN_DATA[req_id]["status"] = statuses.COMPLETED
+
+    def train_model(self, interpreter_dict, persistor, json_data, proj_name, mod_name, model_path=None):
+        reader = RasaReader()
+        training_data = reader.read_from_json(json_data)
+        trainer = Trainer(config.load(".\\trainer_config.yml"))
+        interpreter = trainer.train(training_data)
+        if model_path is None:
+            os.mkdir('.\\temp_train_model')
+            trainer.persist(path='.\\temp_train_model', persistor=persistor, project_name=proj_name,
+                            fixed_model_name=mod_name)
+            shutil.rmtree('.\\temp_train_model')
+        else:
+            trainer.persist(path=model_path + "\\MODELS", project_name=proj_name, fixed_model_name=mod_name)
+
+        if proj_name not in interpreter_dict["interpreters"].keys():
+            interpreter_dict["interpreters"][proj_name] = {mod_name: interpreter}
+        else:
+            interpreter_dict["interpreters"][proj_name][mod_name] = interpreter
+
+        interpreter_dict["current_project"] = proj_name
+        interpreter_dict["current_model"] = mod_name
 
 
 class UpdateInterpreterThread(threading.Thread):
@@ -52,117 +84,79 @@ class UpdateInterpreterThread(threading.Thread):
         self.__model_path = model_path
         threading.Thread.__init__(self)
 
+    def __del__(self):
+        print("Deleting object")
+
     def run(self):
         self.__lock.acquire()
-        load_interpreter(self.__interpreter_dict, self.__model_name, self.__project_name, self.__force, self.__persistor, self.__model_path)
+        self.load_interpreter(self.__interpreter_dict, self.__model_name, self.__project_name, self.__force, self.__persistor, self.__model_path)
         self.__lock.release()
 
+    def load_interpreter(self, interpreter_dict, model_name, project_name, force, persistor, model_path):
+        print(model_path["DATA"])
+        if project_name not in interpreter_dict["interpreters"].keys() or model_name not in \
+                interpreter_dict["interpreters"][project_name].keys() or force == "True":
 
-# LOAD ----------------------------------------------------------------------------------------------------------------
+            if model_path["DATA"] == "":
+                persistor.retrieve(model_name=model_name, project=project_name, target_path='.\\temp_test_model')
 
+                rm_path = '.\\' + project_name + '___' + model_name + '.tar.gz'
+                os.remove(rm_path)
+                new_model_path = ".\\temp_test_model"
+                print("AZURE")
 
-def load_interpreter(interpreter_dict, model_name, project_name, force, persistor, model_path):
-    print(model_path["DATA"])
-    if project_name not in interpreter_dict["interpreters"].keys() or model_name not in interpreter_dict["interpreters"][project_name].keys() or force == "True":
+            else:
+                new_model_path = model_path["DATA"]
+                print("LOCAL")
+                print(new_model_path)
 
-        if model_path["DATA"] == "":
-            persistor.retrieve(model_name=model_name, project=project_name, target_path='.\\temp_test_model')
+            print("Loading interpreter")
+            warnings.filterwarnings(module='rasa_nlu*', action='ignore', category=UserWarning)
+            interpreter = Interpreter.load(new_model_path)
+            warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
+            print("Loaded")
 
-            rm_path = '.\\' + project_name + '___' + model_name + '.tar.gz'
-            os.remove(rm_path)
-            new_model_path = ".\\temp_test_model"
-            print("AZURE")
+            if model_path["DATA"] == "":
+                shutil.rmtree('.\\temp_test_model')
 
-        else:
-            new_model_path = model_path["DATA"]
-            print("LOCAL")
-            print(new_model_path)
+            if project_name not in interpreter_dict["interpreters"].keys():
+                interpreter_dict["interpreters"][project_name] = {model_name: interpreter}
+            else:
+                interpreter_dict["interpreters"][project_name][model_name] = interpreter
 
-        print("Loading interpreter")
-        warnings.filterwarnings(module='rasa_nlu*', action='ignore', category=UserWarning)
-        interpreter = Interpreter.load(new_model_path)
-        warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
-        print("Loaded")
-
-        if model_path["DATA"] == "":
-            shutil.rmtree('.\\temp_test_model')
-
-        if project_name not in interpreter_dict["interpreters"].keys():
-            interpreter_dict["interpreters"][project_name] = {model_name: interpreter}
-        else:
-            interpreter_dict["interpreters"][project_name][model_name] = interpreter
-
-    interpreter_dict["current_project"] = project_name
-    interpreter_dict["current_model"] = model_name
+        interpreter_dict["current_project"] = project_name
+        interpreter_dict["current_model"] = model_name
 
 
-# TRAIN ----------------------------------------------------------------------------------------------------------------
+class TesterClass():
+    def __init__(self, this_test_data, this_TEST_DATA, this_TEST_DATA_RES, this_interpreter_dict):
+        self.__test_data = this_test_data
+        self.__TEST_DATA = this_TEST_DATA
+        self.__TEST_DATA_RES = this_TEST_DATA_RES
+        self.__interpreter_dict = this_interpreter_dict
 
+    def __del__(self):
+        print("Deleting object")
 
-def initiate_training(training_data, project_name, model_name, interpreter_dict, persistor, TRAIN_DATA):
-    req_id = training_data["req_id"]
+    def test_with_model(self):
+        req_id = self.__test_data["req_id"]
+        doc = self.__test_data["test_data"]
+        self.__TEST_DATA[req_id] = {"req_id": req_id, "SENTS": doc["SENTS"]}
 
-    # if "model_path" in training_data.keys():
-    model_path = training_data["model_path"]
-    data_id = training_data["data_id"]
-    f = open("%s\\TRAIN_DATA\\%s\\%s_%s.json" % (model_path, project_name, data_id, model_name), "r")
-    train_doc = eval(f.read())
-    f.close()
-    TRAIN_DATA[req_id]["status"] = statuses.STARTED
-    train_model(interpreter_dict, persistor, train_doc, project_name, model_name, model_path)
+        print("Proceeding to test:", req_id)
 
-    # else:
-    #     mongo_id = training_data["mongo_id"]
-    #     doc = mongo.mongo_get(mongo_id, db_name)
-    #     train_doc = {"rasa_nlu_data": doc["rasa_nlu_data"]}
-    #     TRAIN_DATA[req_id]["status"] = statuses.STARTED
-    #     train_model(interpreter_dict, persistor, train_doc, project_name, model_name)
+        cur_proj = self.__interpreter_dict["current_project"]
+        cur_mod = self.__interpreter_dict["current_model"]
+        interpreter = self.__interpreter_dict["interpreters"][cur_proj][cur_mod]
 
-    TRAIN_DATA[req_id]["status"] = statuses.COMPLETED
+        sents_list_to_test = self.__TEST_DATA[req_id]["SENTS"]
 
+        res_list = []
+        for text_to_test in sents_list_to_test:
+            result = interpreter.parse(text_to_test)
+            res_list += [result]
 
-def train_model(interpreter_dict, persistor, json_data, proj_name, mod_name, model_path=None):
-    reader = RasaReader()
-    training_data = reader.read_from_json(json_data)
-    trainer = Trainer(config.load(".\\trainer_config.yml"))
-    interpreter = trainer.train(training_data)
-    if model_path is None:
-        os.mkdir('.\\temp_train_model')
-        trainer.persist(path='.\\temp_train_model', persistor=persistor, project_name= proj_name, fixed_model_name= mod_name)
-        shutil.rmtree('.\\temp_train_model')
-    else:
-        trainer.persist(path=model_path + "\\MODELS", project_name= proj_name, fixed_model_name= mod_name)
+        self.__TEST_DATA_RES[req_id] = {"req_id": req_id, "result": res_list}
 
-    if proj_name not in interpreter_dict["interpreters"].keys():
-        interpreter_dict["interpreters"][proj_name] = {mod_name: interpreter}
-    else:
-        interpreter_dict["interpreters"][proj_name][mod_name] = interpreter
+        print("Test ", req_id, ": FINISHED")
 
-    interpreter_dict["current_project"] = proj_name
-    interpreter_dict["current_model"] = mod_name
-
-
-# TEST ----------------------------------------------------------------------------------------------------------------
-
-
-def test_with_model(interpreter_dict, test_data, TEST_DATA, TEST_DATA_RES):
-    req_id = test_data["req_id"]
-    doc = test_data["test_data"]
-    TEST_DATA[req_id] = {"req_id": req_id, "SENTS": doc["SENTS"]}
-
-    print("Proceeding to test:", req_id)
-
-    cur_proj = interpreter_dict["current_project"]
-    cur_mod = interpreter_dict["current_model"]
-    interpreter = interpreter_dict["interpreters"][cur_proj][cur_mod]
-
-    sents_list_to_test = TEST_DATA[req_id]["SENTS"]
-
-    res_list = []
-    for text_to_test in sents_list_to_test:
-        result = interpreter.parse(text_to_test)
-        res_list += [result]
-
-    TEST_DATA_RES[req_id] = {"req_id": req_id, "result": res_list}
-
-    print("Test ", req_id, ": FINISHED")

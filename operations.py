@@ -1,6 +1,4 @@
-# from rasa_nlu.persistor import AzurePersistor
-# from mongo_utils import MongoHandler
-from RaServ import UpdateInterpreterThread, TrainThread, test_with_model
+from RaServ import UpdateInterpreterThread, TrainThread, TesterClass
 from threading import Lock, Event
 import queue
 import warnings
@@ -12,11 +10,7 @@ warnings.filterwarnings(module='h5py*', action='ignore', category=FutureWarning)
 
 lock = Lock()
 waiting_event = Event()
-# persistor = AzurePersistor(azure_container= 'rasa-models-test-container', azure_account_name= 'csb6965281488a3x4dd7xbcd',
-#                            azure_account_key= 'ZT4DVNgFfQrbglJXzUX2HuPi6KYysL3b2zxdNlL11umXg811fptnTcubKQ83itTLDAmSdmfqgpiJWylbfumTDQ==')
 persistor = None
-# db_name = 'train_data_test'
-# mongo = MongoHandler(uri)
 interpreter_dict = {"current_project": "", "current_model": "", "interpreters": {}}
 TRAIN_DATA = {}
 TEST_DATA = {}
@@ -37,20 +31,11 @@ class statuses():
 # PROJECTS AND MODELS --------------------------------------------------------------------------------------------------
 
 
-# def get_all_projects():
-#     projects_list = persistor.list_projects()
-#     return projects_list
-#
-#
-# def get_all_models(project):
-#     models_list = persistor.list_models(project)
-#     return models_list
-
-
 def update_interpreter(project, model, force, model_path):
     thread_id = str(uuid.uuid1())
     threads[thread_id] = UpdateInterpreterThread(lock, interpreter_dict, model, project, force, persistor, model_path)
     threads[thread_id].start()
+    del(threads[thread_id])
     return "Interpreter started updating", 201
 
 
@@ -71,8 +56,6 @@ def train_create(t_data_instance, project, model):
     req_id = "train_" + str(uuid.uuid1())
     t_data_all = t_data_instance.get("DATA", None)
     t_data = {"rasa_nlu_data": t_data_all["rasa_nlu_data"]}
-
-    # if t_data_all["ModelPath"] is not None:
 
     data_id = str(uuid.uuid1())
     data_path = "%s\\TRAIN_DATA\\%s" % (t_data_all["ModelPath"], project)
@@ -95,12 +78,9 @@ def train_create(t_data_instance, project, model):
     thread_id = str(uuid.uuid1())
     threads[thread_id] = TrainThread(lock, interpreter_dict, data_to_send, project, model, persistor, TRAIN_DATA)
     threads[thread_id].start()
+    del(threads[thread_id])
 
     return req_id
-
-
-# def train_read_all():
-#     return [TRAIN_DATA[key] for key in sorted(TRAIN_DATA.keys())]
 
 
 def train_is_finished(req_id):
@@ -133,14 +113,11 @@ def test_create(t_data_instance):
 
     print(interpreter_dict)
 
-    test_with_model(interpreter_dict, data_to_send, TEST_DATA, TEST_DATA_RES)
+    tester = TesterClass(interpreter_dict, data_to_send, TEST_DATA, TEST_DATA_RES)
+    tester.test_with_model()
     lock.release()
+    del(tester)
     return TEST_DATA_RES[req_id]["result"]
-
-
-# def test_read_all_res():
-#     return [TEST_DATA_RES[key] for key in sorted(TEST_DATA_RES.keys())]
-
 
 
 
