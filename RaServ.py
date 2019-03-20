@@ -9,7 +9,6 @@ import threading
 
 warnings.filterwarnings(module='h5py*', action='ignore', category=FutureWarning)
 
-
 class statuses():
     NEW = "new"
     STARTED = "started"

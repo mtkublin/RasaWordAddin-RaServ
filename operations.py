@@ -36,6 +36,7 @@ def update_interpreter(project, model, force, model_path):
     threads[thread_id] = UpdateInterpreterThread(lock, interpreter_dict, model, project, force, persistor, model_path)
     threads[thread_id].start()
     del(threads[thread_id])
+
     return "Interpreter started updating", 201
 
 
