@@ -34,7 +34,7 @@ duckling==1.8.0
 et-xmlfile==1.0.1
 fakeredis==0.10.3
 Flask==1.0.2
-Flask-Cors==3.0.4
+Flask-Cors==3.0.9
 future==0.16.0
 gast==0.2.0
 gevent==1.2.2
