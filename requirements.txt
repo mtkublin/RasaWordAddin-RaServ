@@ -72,7 +72,7 @@ msrestazure==0.5.1
 murmurhash==0.28.0
 networkx==2.1
 nltk==3.3
-numpy==1.14.5
+numpy==1.22.0
 oauthlib==2.1.0
 openapi-spec-validator==0.2.4
 openpyxl==2.5.9
